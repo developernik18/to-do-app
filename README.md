@@ -1,55 +1,101 @@
-# React + TypeScript + Vite
+## Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple yet powerful To-Do List application built with React, TypeScript, and TailwindCSS. It supports the following features:
 
-Currently, two official plugins are available:
+- Adding and removing tasks
+- Marking tasks as completed
+- Drag-and-drop reordering using `react-dnd`
+- Keyboard shortcuts for quick actions
+- Filtering tasks (All, Active, Completed)
+- Persistent data storage with Local Storage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Ensure you have the following installed:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Node.js (latest LTS version recommended)
+- npm or yarn
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Steps to Install
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Clone the repository:
+    
+    ```bash
+    git clone https://github.com/developernik18/to-do-app.git
+    cd to-do-app
+    
+    ```
+    
+2. Install dependencies:
+    
+    ```bash
+    npm install
+    # or
+    yarn install
+    
+    ```
+    
+3. Start the development server:
+    
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    
+    ```
+    
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
-# to-do-app
+## Features & Usage
+
+### Adding a Task
+
+- Type a task in the input box.
+- Press `Enter` to add the task.
+- Alternatively, click the "Add" button.
+
+### Marking a Task as Completed
+
+- Click on the task text or the checkbox to toggle completion.
+- Press `Shift + Enter` to mark the last task as completed.
+
+### Removing a Task
+
+- Click the "Remove" button next to a task.
+
+### Drag-and-Drop Reordering
+
+- Drag tasks to reorder them.
+- The new order is saved automatically.
+
+### Filtering Tasks
+
+- Click on "All", "Active", or "Completed" to filter tasks.
+- The selected filter is highlighted.
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| Enter | Add a new task |
+| Shift + Enter | Mark the last task as completed |
+
+## Data Persistence
+
+- Tasks are stored in the browser's Local Storage.
+- Tasks persist even after page refresh.
+
+## Technologies Used
+
+- **React**: UI framework
+- **TypeScript**: Type-safe JavaScript
+- **TailwindCSS**: Styling framework
+- **react-dnd**: Drag-and-drop functionality
+- **Local Storage**: Data persistence
+
+## Future Enhancements
+
+- Dark mode support
+- Task editing feature
+- Task due dates and reminders
