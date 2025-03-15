@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -8,9 +8,19 @@ interface Task {
   completed: boolean;
 }
 
+interface TaskItemProps {
+  task: Task;
+  index: number;
+  moveTask: (fromIndex: number, toIndex: number) => void;
+  toggleTask: (index: number) => void;
+  removeTask: (index: number) => void;
+}
+
 // Task item component with drag-and-drop functionality
-const TaskItem = ({ task, index, moveTask, toggleTask, removeTask }: any) => {
-  const [{ isDragging }, ref] = useDrag({
+const TaskItem: React.FC<TaskItemProps> = ({ task, index, moveTask, toggleTask, removeTask }) => {
+  const taskRef = useRef<HTMLLIElement | null>(null);
+
+  const [{ isDragging }, drag] = useDrag({
     type: "TASK",
     item: { index },
     collect: (monitor) => ({
@@ -20,7 +30,7 @@ const TaskItem = ({ task, index, moveTask, toggleTask, removeTask }: any) => {
 
   const [{ isOver }, drop] = useDrop({
     accept: "TASK",
-    hover: (draggedItem: any) => {
+    hover: (draggedItem: { index: number }) => {
       if (draggedItem.index !== index) {
         moveTask(draggedItem.index, index);
         draggedItem.index = index;
@@ -31,9 +41,12 @@ const TaskItem = ({ task, index, moveTask, toggleTask, removeTask }: any) => {
     }),
   });
 
+  drag(taskRef);
+  drop(taskRef);
+
   return (
     <li
-      ref={(node) => ref(drop(node))}
+      ref={taskRef}
       className={`flex justify-between items-center p-3 border rounded-lg cursor-pointer transition-all 
         ${isDragging ? "bg-yellow-200" : isOver ? "bg-blue-300" : "bg-gray-100"}`}
     >
@@ -59,7 +72,7 @@ const TaskItem = ({ task, index, moveTask, toggleTask, removeTask }: any) => {
   );
 };
 
-export default function TodoApp() {
+const TodoApp: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     const savedTasks = localStorage.getItem("tasks");
     return savedTasks ? JSON.parse(savedTasks) : [];
@@ -88,10 +101,9 @@ export default function TodoApp() {
   };
 
   const toggleTask = (index: number): void => {
-    const newTasks = tasks.map((t, i) =>
-      i === index ? { ...t, completed: !t.completed } : t
+    setTasks((prevTasks) =>
+      prevTasks.map((t, i) => (i === index ? { ...t, completed: !t.completed } : t))
     );
-    setTasks(newTasks);
   };
 
   const toggleLastTaskCompletion = (): void => {
@@ -101,14 +113,16 @@ export default function TodoApp() {
   };
 
   const removeTask = (index: number): void => {
-    setTasks(tasks.filter((_, i) => i !== index));
+    setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
   };
 
   const moveTask = (fromIndex: number, toIndex: number): void => {
-    const updatedTasks = [...tasks];
-    const [movedTask] = updatedTasks.splice(fromIndex, 1);
-    updatedTasks.splice(toIndex, 0, movedTask);
-    setTasks(updatedTasks);
+    setTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks];
+      const [movedTask] = updatedTasks.splice(fromIndex, 1);
+      updatedTasks.splice(toIndex, 0, movedTask);
+      return updatedTasks;
+    });
   };
 
   const filteredTasks = tasks.filter((task) => {
@@ -135,12 +149,11 @@ export default function TodoApp() {
           </button>
         </div>
         <div className="flex justify-around p-2 bg-gray-200 rounded-lg">
-          {['all', 'active', 'completed'].map((option) => (
+          {["all", "active", "completed"].map((option) => (
             <button
               key={option}
               onClick={() => setFilter(option)}
-              className={`px-3 py-1 rounded-lg text-lg transition ${filter === option ? "bg-blue-500 text-white" : "bg-gray-300 hover:bg-gray-400"
-                }`}
+              className={`px-3 py-1 rounded-lg text-lg transition ${filter === option ? "bg-blue-500 text-white" : "bg-gray-300 hover:bg-gray-400"}`}
             >
               {option.charAt(0).toUpperCase() + option.slice(1)}
             </button>
@@ -161,4 +174,6 @@ export default function TodoApp() {
       </div>
     </DndProvider>
   );
-}
+};
+
+export default TodoApp;
